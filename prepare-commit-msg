@@ -7,7 +7,10 @@ if [ -z "$BRANCHES_TO_SKIP" ]; then
 fi
 
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# extract number from branch in form of feature/1234-some-feature-name
 BRANCH_NAME="${BRANCH_NAME##*/}"
+# 1234-some-feature-name
 BRANCH_NAME_TO_PRINT=$(echo $BRANCH_NAME | sed -n 's/\([0-9]*\)\-.*/\1/p')
 
 BRANCH_EXCLUDED=$(printf "%s\n" "${BRANCHES_TO_SKIP[@]}" | grep -c "^$BRANCH_NAME$")
