@@ -16,6 +16,6 @@ FEATURE_NUMBER=$(echo $BRANCH_NAME | sed -n 's/\([0-9]*\)\-.*/\1/p')
 BRANCH_EXCLUDED=$(printf "%s\n" "${BRANCHES_TO_SKIP[@]}" | grep -c "^$BRANCH_NAME$")
 BRANCH_IN_COMMIT=$(grep -c "\[$BRANCH_NAME\]" $1)
 
-if [ -n "$BRANCH_NAME" ] && ! [[ $BRANCH_EXCLUDED -eq 1 ]] && ! [[ $BRANCH_IN_COMMIT -ge 1 ]] && ! [[ `cat $1` == Merge* ]]; then
+if [ -n "$BRANCH_NAME" ] && ! [[ $BRANCH_EXCLUDED -eq 1 ]] && ! [[ $BRANCH_IN_COMMIT -ge 1 ]] && ! [[ $2 = merge  ]]; then
   sed -i.bak -e "1s/^/CLOUDAC-$FEATURE_NUMBER /" $1
 fi
