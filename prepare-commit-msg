@@ -7,13 +7,15 @@ if [ -z "$BRANCHES_TO_SKIP" ]; then
 fi
 
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
+BRANCH_NAME_PREFIX=$(echo $BRANCH_NAME | cut -d'/' -f 1)
 
 # remove first part of branch in form of feature/1234-some-feature-name
 BRANCH_NAME="${BRANCH_NAME##*/}"
+
 # extract feature number from 1234-some-feature-name
 FEATURE_NUMBER=$(echo $BRANCH_NAME | sed -n 's/\([0-9]*\)\-.*/\1/p')
 
-BRANCH_EXCLUDED=$(printf "%s\n" "${BRANCHES_TO_SKIP[@]}" | grep -c "^$BRANCH_NAME$")
+BRANCH_EXCLUDED=$(printf "%s\n" "${BRANCHES_TO_SKIP[@]}" | grep -c "^$BRANCH_NAME_PREFIX$")
 BRANCH_IN_COMMIT=$(grep -c "\[$BRANCH_NAME\]" $1)
 
 prefix=CLOUDAC-$FEATURE_NUMBER:
