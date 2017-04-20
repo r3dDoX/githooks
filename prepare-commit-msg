@@ -9,17 +9,16 @@ fi
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
 BRANCH_NAME_PREFIX=$(echo $BRANCH_NAME | cut -d'/' -f 1)
 
-# remove first part of branch in form of feature/1234-some-feature-name
+# remove first part of branch in form of feature/STORY-1234-some-feature-name
 BRANCH_NAME="${BRANCH_NAME##*/}"
 
-# extract feature number from 1234-some-feature-name
-FEATURE_NUMBER=$(echo $BRANCH_NAME | sed -n 's/\([0-9]*\)\-.*/\1/p')
+# extract feature number from STORY-1234-some-feature-name
+STORY_PREFIX="GALRE"
+prefix=$(echo $BRANCH_NAME | sed -n "s/\($STORY_PREFIX\-[0-9]*\)[\-_].*/\1/p")
 
 BRANCH_EXCLUDED=$(printf "%s\n" "${BRANCHES_TO_SKIP[@]}" | grep -c "^$BRANCH_NAME_PREFIX$")
 BRANCH_IN_COMMIT=$(grep -c "\[$BRANCH_NAME\]" $1)
 
-prefix=CLOUDAC-$FEATURE_NUMBER:
-
 if [ -n "$BRANCH_NAME" ] && ! [[ $BRANCH_EXCLUDED -eq 1 ]] && ! [[ $BRANCH_IN_COMMIT -ge 1 ]] && ! [[ $2 = merge  ]] && ! [[ `cat $1` == $prefix* ]]; then
-  sed -i.bak -e "1s/^/$prefix /" $1
+  sed -i.bak -e "1s/^/$prefix: /" $1
 fi
